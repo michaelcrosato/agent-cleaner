@@ -22,15 +22,25 @@
   - types:   `<cmd>`
   - test:    `<cmd>`
 
-## Tooling
+## Tooling  (see TOOLBELT.md)
+
+**Gates** — required; installed as **repo dev-deps**, pinned:
 | Tool | Status | Notes |
 |---|---|---|
 | ruff | detected / installed / n/a | |
 | mypy | detected / installed / n/a | |
 | pytest | detected / installed / n/a | |
-| <other> | | |
+| biome \| prettier+eslint+tsc | detected / installed / n/a | js/ts |
 
-> Every *installed* tool is pinned and recorded here so the environment is reproducible.
+**Accelerants** — optional; **agent environment**, never committed:
+| Tool | Available? | Action |
+|---|---|---|
+| ripgrep (rg) | yes / no | use / install / request |
+| ast-grep | yes / no | use / install / request |
+| tokei | yes / no | use / install / request |
+
+> Gates are pinned and recorded here so the environment is reproducible.
+> Accelerants live in the agent environment only.
 
 ## Tier / DAG plan
 | Tier | Chunk ID | Scope (paths) | Depends on | Parallel group | Write-surface notes |

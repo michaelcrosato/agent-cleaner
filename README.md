@@ -91,6 +91,7 @@ agent-cleaner/
 ├── STANDARD.md            the invariant bar + the three dispositions
 ├── PROTOCOL.md            the engine — phases, QUICK vs SCALE, orchestration, context mgmt
 ├── WORKER.md              subagent contract — scope-locked in, structured summary out
+├── TOOLBELT.md            the right tools (gates vs accelerants vs host-provided) + efficiency discipline
 ├── templates/
 │   ├── PLAN.md            the plan (tiers, chunks, parallel width)
 │   └── STATE.md           the system of record (progress, token ledger, findings, handoff)
@@ -111,7 +112,8 @@ The scripts are **optional conveniences**. The agent can run the equivalent comm
 These are the package's *default* recommendations. They only apply where the repo is unopinionated; an existing, working choice is always respected.
 
 - **Python:** [Ruff](https://docs.astral.sh/ruff/) is the consolidated lint + format + import-sort tool (replaces Black, isort, Flake8, pyupgrade, …). Sequence: `ruff check --fix` then `ruff format`. Type gate defaults to **mypy** — [ty](https://astral.sh/blog/ty) is faster but still beta and not yet a full mypy replacement, so it's used only if the repo already adopts it.
-- **JS/TS:** Prettier (format), ESLint (lint), `tsc --noEmit` (types).
+- **JS/TS:** [Biome](https://biomejs.dev/) (Rust-based lint + format, 10–100× faster) is the default for unopinionated repos; an existing Prettier + ESLint setup is honored. `tsc --noEmit` is the type gate.
+- **Agent efficiency:** the agent uses [ripgrep](https://github.com/BurntSushi/ripgrep) (text) and [ast-grep](https://ast-grep.github.io/) (structural) over `cat`/`sed`/`grep` to avoid token bleed — see [TOOLBELT.md](TOOLBELT.md) for the full toolbelt and install-vs-request rules.
 - **Agent instructions:** [AGENTS.md](https://agents.md/) is the cross-tool standard for project instructions.
 
 ---

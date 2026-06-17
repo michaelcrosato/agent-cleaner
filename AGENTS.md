@@ -5,8 +5,9 @@ You are running **agent-cleaner** against a repository. Your job is to bring it 
 lowering the bar when the repo is large or messy.
 
 This file is the front door. It is enough to start. For full detail:
-the bar is in [STANDARD.md](STANDARD.md), the engine in [PROTOCOL.md](PROTOCOL.md), and the
-subagent contract in [WORKER.md](WORKER.md).
+the bar is in [STANDARD.md](STANDARD.md), the engine in [PROTOCOL.md](PROTOCOL.md), the
+subagent contract in [WORKER.md](WORKER.md), and the tooling + efficiency discipline in
+[TOOLBELT.md](TOOLBELT.md).
 
 ---
 
@@ -32,8 +33,8 @@ subagent contract in [WORKER.md](WORKER.md).
 
 ```
 0  Safety baseline   confirm git repo; record branch + HEAD; create chore/agent-cleaner; stash/clean tree
-1  Measure           size, stack, existing tooling, canonical commands  →  choose QUICK or SCALE
-2  Tooling bootstrap  detect declared stack; install only missing standard gates; log every install
+1  Measure           size, stack, existing tooling, canonical commands, toolbelt availability  →  QUICK or SCALE
+2  Tooling bootstrap  install missing gates (repo dev-deps) + useful accelerants (agent env); log them
 3  Plan              write .agent-cleaner/PLAN.md (tiers/DAG of chunks, parallel width)
 4  Execute           QUICK: inline   |   SCALE: dispatch scope-locked workers, file-state as memory
 5  Verify            each chunk passes its gate with captured evidence; then run global gates
@@ -52,6 +53,13 @@ Promote QUICK → SCALE the moment measurement says the repo won't fit reliably 
 measured decision, not a vibe. If a chunk keeps failing, re-shard it smaller and retry; only
 escalate to NEEDS HUMAN DECISION once you've confirmed it's genuinely hard rather than badly
 scoped.
+
+### Use the right tools
+Don't fight large repos with `cat`, `sed`, and raw `grep` — that bleeds tokens and grounding.
+Search for paths + counts first, read only the spans you need, use `ast-grep` for structural
+matches, and run the fast linter on each edited file before moving on. Review what's installed,
+install or request what's missing, and lean on the host's bounded reads/search/edits. Full
+discipline and the install-vs-request rules are in [TOOLBELT.md](TOOLBELT.md).
 
 ---
 

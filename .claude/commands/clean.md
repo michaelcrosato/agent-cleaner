@@ -24,9 +24,11 @@ Optional focus from the user: $ARGUMENTS
 
 ## The loop
 0. **Safety baseline** — confirm git repo; record branch + HEAD; create `chore/agent-cleaner`; clean tree.
-1. **Measure** — files, LOC, stack, existing tooling, canonical commands (CI/Makefile/scripts).
+1. **Measure** — files, LOC, stack, existing tooling, canonical commands (CI/Makefile/scripts),
+   and **toolbelt availability** (`rg`, `ast-grep`, `tokei`, `biome`, …).
    Decide **QUICK** (fits in context → one pass) or **SCALE** (too big → orchestrate).
-2. **Tooling bootstrap** — detect declared stack; install only missing standard gates; log each.
+2. **Tooling bootstrap** — install missing **gates** as repo dev-deps; install/request useful
+   **accelerants** in your environment; log each. Detect before change; never migrate working tools.
 3. **Plan** — write `.agent-cleaner/PLAN.md`: tiers (config → repo-wide format → parallel modules
    → docs/tests → integration); parallel only across disjoint write-surfaces.
 4. **Execute** —
@@ -41,8 +43,8 @@ Optional focus from the user: $ARGUMENTS
 
 ## The bar (apply per stack; defaults only when the repo is unopinionated)
 - **Builds & runs** from a documented command; lockfile committed.
-- **Format** tool-enforced (`ruff format` / Prettier / `gofmt` / `rustfmt`).
-- **Lint** zero errors (`ruff check --fix` / ESLint); import order included.
+- **Format** tool-enforced (`ruff format` / Biome or Prettier / `gofmt` / `rustfmt`).
+- **Lint** zero errors (`ruff check --fix` / Biome or ESLint); import order included.
 - **Types** pass (mypy by default; ty/pyright/tsc if already adopted).
 - **Tests** run and pass; no unexplained skips.
 - **Docs match reality** — README quickstart actually works.
@@ -50,5 +52,9 @@ Optional focus from the user: $ARGUMENTS
 - **Deps & security** — lockfile consistent; known-vuln deps surfaced; unused deps flagged.
 - **Git** — clean tree; unmerged branches never deleted.
 - **Structure** — dead code flagged; TODO/FIXME triaged.
+
+**Work efficiently:** search for paths + counts before reading, pull only the spans you need,
+use `ast-grep` for structural matches, and lint each edited file before moving on. Don't `cat`
+large files or blind-`sed` edits — it bleeds tokens.
 
 Begin with Phase 0 now. Do not skip measurement — the QUICK/SCALE choice depends on it.

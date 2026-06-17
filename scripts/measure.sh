@@ -81,4 +81,23 @@ say "Detected canonical command sources:"
 [ -e package.json ] && say "  + package.json scripts"
 
 hr
-say "Done. Use this to choose QUICK vs SCALE and to find the repo's own gate commands."
+say "Toolbelt availability (agent environment) — see TOOLBELT.md:"
+check_tool() {  # check_tool <display-name> [alt-binaries...]
+  for c in "$@"; do
+    if have "$c"; then say "  [x] $1"; return; fi
+  done
+  say "  [ ] $1  (missing — install as repo dev-dep if a gate, else in agent env or request)"
+}
+check_tool rg                  # fast text search (retrieval funnel, layer 1)
+check_tool ast-grep sg         # structural AST search/rewrite (layer 2)
+check_tool fd fdfind           # fast file discovery
+check_tool tokei               # LOC by language
+check_tool ruff                # python lint+format gate
+check_tool biome               # js/ts lint+format gate (fast default)
+check_tool mypy                # python type gate
+check_tool pytest              # python test gate
+check_tool gitleaks trufflehog # secret scan gate
+
+hr
+say "Done. Use this to choose QUICK vs SCALE, find the repo's own gate commands, and decide"
+say "which tools to use, install, or request (TOOLBELT.md)."

@@ -64,7 +64,12 @@ if [ -f package.json ]; then
   say "[node]"
   PM="npm"; have pnpm && [ -f pnpm-lock.yaml ] && PM="pnpm"; have yarn && [ -f yarn.lock ] && PM="yarn"
 
-  if have npx; then
+  # Prefer Biome when the repo is configured for it; otherwise Prettier + ESLint.
+  if [ -f biome.json ] || [ -f biome.jsonc ] || grep -q '@biomejs/biome' package.json 2>/dev/null; then
+    BIOME="biome"; have biome || { have npx && BIOME="npx --no-install @biomejs/biome"; }
+    if [ $FIX -eq 1 ]; then run "biome check (write)" $BIOME check --write .
+    else run "biome check" $BIOME check .; fi
+  elif have npx; then
     if grep -q '"prettier"' package.json 2>/dev/null || [ -f .prettierrc ]; then
       if [ $FIX -eq 1 ]; then run "prettier (write)" npx --no-install prettier --write .
       else run "prettier check" npx --no-install prettier --check .; fi
@@ -73,9 +78,10 @@ if [ -f package.json ]; then
       if [ $FIX -eq 1 ]; then run "eslint (fix)" npx --no-install eslint . --fix
       else run "eslint" npx --no-install eslint .; fi
     fi
-    if [ -f tsconfig.json ]; then
-      run "tsc --noEmit" npx --no-install tsc --noEmit
-    fi
+  fi
+
+  if [ -f tsconfig.json ] && have npx; then
+    run "tsc --noEmit" npx --no-install tsc --noEmit
   fi
 
   if grep -q '"test"' package.json 2>/dev/null; then

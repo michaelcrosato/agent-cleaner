@@ -28,8 +28,12 @@ Run [`scripts/measure.sh`](scripts/measure.sh) (or the equivalent commands direc
 - The stack(s): from manifests/lockfiles (`pyproject.toml`, `package.json`, `go.mod`,
   `Cargo.toml`, …).
 - **Existing tooling**: tool configs (`[tool.ruff]`, `.pre-commit-config.yaml`, `.eslintrc`,
-  `mypy.ini`, `tsconfig.json`), and **canonical commands** (CI workflows, `Makefile`/`justfile`,
-  `package.json` scripts). These tell you the repo's *own* definition of its gates — prefer them.
+  `biome.json`, `mypy.ini`, `tsconfig.json`), and **canonical commands** (CI workflows,
+  `Makefile`/`justfile`, `package.json` scripts). These tell you the repo's *own* definition of
+  its gates — prefer them.
+- **Toolbelt availability**: which efficiency tools are installed in *your* environment
+  (`rg`, `ast-grep`, `fd`, `tokei`, `biome`, …). `measure.sh` prints this. See
+  [TOOLBELT.md](TOOLBELT.md) — knowing what's on the box decides what you use, install, or request.
 - A rough size/effort estimate.
 
 **Then decide the mode:**
@@ -43,18 +47,27 @@ reliably. Promotion is cheap; a shallow audit is not.
 
 ## Phase 2 — Tooling bootstrap
 
-Detect-before-install, always:
+Detect-before-install, always. Two tracks (full detail in [TOOLBELT.md](TOOLBELT.md)):
 
+**Gates** (required — they enforce the Standard):
 1. Use the repo's declared tools and canonical commands as the gates. If the repo says how it
    lints/tests, that *is* the gate.
-2. Install only **missing standard gates**, minimally, as dev dependencies aligned to the stack
-   (e.g. add Ruff + mypy + pytest to an unopinionated Python repo that has none). Pin them.
+2. Install only **missing standard gates**, minimally, as **repo dev dependencies** aligned to
+   the stack (e.g. add Ruff + mypy + pytest to an unopinionated Python repo that has none;
+   Biome or Prettier+ESLint+tsc for JS/TS). Pin them.
 3. **Record every install** in `PLAN.md` so a fresh environment is reproducible.
 4. Do **not** migrate package managers, swap working tools, or "modernize" a deliberate setup.
    If the existing tooling is unusual but functional, that's likely INTENTIONAL — treat it so or
    raise a NEEDS HUMAN DECISION; don't unilaterally replace it.
 
-Default stack reference is in [STANDARD.md](STANDARD.md). Tooling additions are themselves part
+**Accelerants** (optional — they make you fast and cheap: `rg`, `ast-grep`, `fd`, `tokei`):
+5. These install into **your environment**, not the repo, and are never committed. If one is
+   missing and useful, install it non-interactively via the platform package manager; if that
+   needs elevation/network you lack, **request** it from the user (name the exact command) and
+   fall back to the host's built-in search/read meanwhile. Never block the audit on an accelerant.
+
+Default stack reference is in [STANDARD.md](STANDARD.md); the toolbelt and the retrieval-funnel /
+guarded-edit discipline are in [TOOLBELT.md](TOOLBELT.md). Tooling additions are themselves part
 of the audit trail.
 
 ## Phase 3 — Plan
@@ -79,6 +92,11 @@ Rules:
 - In **QUICK** mode the plan legitimately collapses to a single chunk. Keep it that simple.
 
 ## Phase 4 — Execute
+
+Throughout, work the [TOOLBELT.md](TOOLBELT.md) discipline: search for paths + counts before
+reading; pull only the line spans you need; use `ast-grep` when regex starts matching the wrong
+thing; and run the fast linter on each edited file before moving on (guarded edit loop). Avoiding
+full-file dumps is what keeps this affordable at scale.
 
 ### QUICK path
 Do the work inline: run the gates, apply safe fixes, reconcile docs, verify each fix by re-running

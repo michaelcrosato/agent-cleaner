@@ -28,14 +28,14 @@ Every category below resolves to one of three **dispositions**. Nothing is left 
 
 ### 2. Formatting
 - Formatting is consistent and **tool-enforced**, not hand-maintained.
-- Defaults when unopinionated: `ruff format` (Python), Prettier (JS/TS/MD/YAML), `gofmt` (Go),
-  `rustfmt` (Rust).
+- Defaults when unopinionated: `ruff format` (Python), Biome (fast Rust-based JS/TS; Prettier if
+  the repo already uses it), `gofmt` (Go), `rustfmt` (Rust).
 - Run in check mode for verification; apply in fix mode as a one-time, repo-wide mechanical pass.
 
 ### 3. Linting
 - Zero lint **errors** on the agreed ruleset. Warnings are triaged, not ignored.
 - Default when unopinionated: `ruff check --fix` (Python; covers Flake8/isort/pyupgrade/etc.),
-  ESLint (JS/TS).
+  Biome or ESLint (JS/TS — honor whichever the repo already uses).
 - Import ordering is part of this gate (`ruff check --select I --fix`), since formatters don't
   sort imports.
 
