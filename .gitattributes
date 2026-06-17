@@ -1,0 +1,4 @@
+# Normalize line endings. Shell scripts MUST stay LF or they break on Unix.
+* text=auto eol=lf
+*.sh text eol=lf
+*.md text eol=lf

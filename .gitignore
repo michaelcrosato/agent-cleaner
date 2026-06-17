@@ -1,0 +1,12 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# agent-cleaner runtime artifacts (created inside a *target* repo, never committed here)
+.agent-cleaner/
+
+# private brainstorming notes — not part of the shipped package
+intial-research.md
