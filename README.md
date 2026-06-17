@@ -45,8 +45,11 @@ Clone this repo, then from your target repo tell the agent:
 
 Agents that read `AGENTS.md` natively (most do, as of 2026) can also have it vendored directly into the target repo.
 
-### Standalone (any tool-using frontier model)
-Paste the contents of [AGENTS.md](AGENTS.md) as your first message, then: *"Apply this to the repository in the current directory."*
+### Single file (paste one prompt)
+When it makes more sense to inject one prompt than to bring in the whole repo, use
+[PROMPT.md](PROMPT.md) — a fully self-contained distillation of the entire system in under 4,000
+characters. Paste it as your first message, then: *"Apply this to the repository in the current
+directory."* It depends on no other file.
 
 ---
 
@@ -87,6 +90,7 @@ Purpose-built means knowing where to stop. agent-cleaner will not:
 ```
 agent-cleaner/
 ├── README.md              you are here
+├── PROMPT.md              the whole system distilled into one self-contained prompt (<4000 chars)
 ├── AGENTS.md              front door — the operating contract any agent follows
 ├── STANDARD.md            the invariant bar + the three dispositions
 ├── PROTOCOL.md            the engine — phases, QUICK vs SCALE, orchestration, context mgmt
